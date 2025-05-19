@@ -8,8 +8,8 @@ public class Player : MonoBehaviour
         [SerializeField] private BoxCollider2D playerCollider2D;
         [SerializeField] private Vector2 rigidbodyVelocity;
 
-        public event Action OnPlayerLand;
-        public event Action OnPlayerJump; 
+        public event Action PlayerLandEvent;
+        public event Action PlayerJumpEvent; 
         private void Awake()
         {
             playerRigidBody2D = GetComponent<Rigidbody2D>();
@@ -164,13 +164,13 @@ public class Player : MonoBehaviour
 
         private bool _startJumpTimer = false;
         private float _jumpTimer;
-        private float _jumpTimerMax = 0.5f;
+        private const float JUMP_TIMER_MAX = 0.5f;
 
-        [SerializeField] private float jumpBufferTimerMax = 0.3f;
+        [SerializeField] private  float JUMP_BUFFER_TIMER_MAX = 0.3f;
         private float _jumpBufferTimer;
         private bool _isJumpBuffered = false;
 
-        [SerializeField] private float cayoteeTimerMax = 0.15f;
+        [SerializeField] private  float CAYOTEE_TIMER_MAX = 0.15f;
         private float _cayoteeTimer;
 
         // private void CalculateJumpVelocity()
@@ -276,12 +276,13 @@ public class Player : MonoBehaviour
             if (!IsGrounded)
             {
                 //calculate cayotee time
+                _cayoteeTimer += Time.deltaTime;
             }
 
             if (_isJumpBuffered)
             {
                 _jumpBufferTimer += Time.deltaTime;
-                if (_jumpBufferTimer >= jumpBufferTimerMax)
+                if (_jumpBufferTimer >= JUMP_BUFFER_TIMER_MAX)
                 {
                     _isJumpBuffered = false;
                     _jumpBufferTimer = 0;
@@ -290,12 +291,12 @@ public class Player : MonoBehaviour
 
             if (_isJumpDown)
             {
-                if (IsGrounded)
+                if (IsGrounded || (_cayoteeTimer <= CAYOTEE_TIMER_MAX))
                 {
                     _startJumpTimer = true;
                     IsJumping = true;
                     IsGrounded = false;
-                    OnPlayerJump?.Invoke();
+                    PlayerJumpEvent?.Invoke();
                 }
                 else
                 {
@@ -308,7 +309,7 @@ public class Player : MonoBehaviour
                 _jumpTimer += Time.deltaTime;
                 CurrentVerticalSpeed = jumpVelocityCurve.Evaluate(_jumpTimer);
                 
-                if (_jumpTimer >= _jumpTimerMax)
+                if (_jumpTimer >= JUMP_TIMER_MAX)
                 {
                     _startJumpTimer = false;
                     _jumpTimer = 0;
@@ -329,9 +330,11 @@ public class Player : MonoBehaviour
             {
                 if (IsGrounded)
                 {
-                    Debug.Log("this si runngi every frame");
+                    //Debug.Log("this si runngi every frame");
                     IsJumping = false;
-                    OnPlayerLand?.Invoke();
+                    _cayoteeTimer = 0;
+                    //_jumpBufferTimer = 0;
+                    PlayerLandEvent?.Invoke();
                     if (_isJumpBuffered)
                     {
                         Debug.Log("Jumping ON Buffer");
@@ -339,7 +342,7 @@ public class Player : MonoBehaviour
                         _startJumpTimer = true;
                         IsJumping = true;
                         _jumpTimer = 0;
-                        OnPlayerJump?.Invoke();
+                        PlayerJumpEvent?.Invoke();
                         
                         _isJumpBuffered = false;
                     }
