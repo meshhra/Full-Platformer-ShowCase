@@ -332,17 +332,17 @@ public class Player : MonoBehaviour
                     Debug.Log("this si runngi every frame");
                     IsJumping = false;
                     OnPlayerLand?.Invoke();
-                    // if (_isJumpBuffered)
-                    // {
-                    //     Debug.Log("Jumping ON Buffer");
-                    //     
-                    //     _startJumpTimer = true;
-                    //     IsJumping = true;
-                    //     _jumpTimer = 0;
-                    //     OnPlayerJump?.Invoke();
-                    //     
-                    //     _isJumpBuffered = false;
-                    // }
+                    if (_isJumpBuffered)
+                    {
+                        Debug.Log("Jumping ON Buffer");
+                        
+                        _startJumpTimer = true;
+                        IsJumping = true;
+                        _jumpTimer = 0;
+                        OnPlayerJump?.Invoke();
+                        
+                        _isJumpBuffered = false;
+                    }
                 }
             }
             

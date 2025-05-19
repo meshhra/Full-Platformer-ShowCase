@@ -359,7 +359,7 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
-  jumpBufferTimerMax: 0.6
+  jumpBufferTimerMax: 0.32
   cayoteeTimerMax: 0.15
 --- !u!50 &489133331
 Rigidbody2D:
@@ -841,7 +841,7 @@ TrailRenderer:
       m_Curve:
       - serializedVersion: 3
         time: 0
-        value: 0.10407376
+        value: 0.10866666
         inSlope: 0
         outSlope: 0
         tangentMode: 0
@@ -897,7 +897,7 @@ TrailRenderer:
     textureScale: {x: 1, y: 1}
     shadowBias: 0.5
     generateLightingData: 0
-  m_MinVertexDistance: 0.1
+  m_MinVertexDistance: 0.22
   m_MaskInteraction: 0
   m_Autodestruct: 0
   m_Emitting: 1
